@@ -11,11 +11,11 @@ namespace KLEPIKOV30323WEB.UI.Data
             var userManager = scope
             .ServiceProvider
             .GetRequiredService<UserManager<AppUser>>();
-            var user = await userManager.FindByEmailAsync("admin@gmail.com");
+            var user = await userManager.FindByEmailAsync("evgeniy@gmail.com");
             if (user == null)
             {
                 user = new AppUser();
-                await userManager.SetEmailAsync(user, "admin@gmail.com");
+                await userManager.SetEmailAsync(user, "evgeniy@gmail.com");
                 await userManager.SetUserNameAsync(user, user.Email);
                 user.EmailConfirmed = true;
                 await userManager.CreateAsync(user, "123456");
