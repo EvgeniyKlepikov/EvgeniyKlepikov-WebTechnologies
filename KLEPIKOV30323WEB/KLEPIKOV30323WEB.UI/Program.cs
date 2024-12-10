@@ -2,6 +2,7 @@ using KLEPIKOV30323WEB.UI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,15 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IEmailSender, NoOpEmailSender>();
 
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("admin", p =>
+    p.RequireClaim(ClaimTypes.Role, "admin"));
+});
+
 var app = builder.Build();
+
+await DbInit.SetupIdentityAdmin(app);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
