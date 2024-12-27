@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
+    <ProjectReference Include="..\KLEPIKOV30323WEB.Domain\KLEPIKOV30323WEB.Domain.csproj" />
   </ItemGroup>
 
 </Project>
