@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KLEPIKOV30323WEB.UI.Services.CategoryService;
+using KLEPIKOV30323WEB.UI.Services.ProductService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KLEPIKOV30323WEB.UI.Controllers
 {

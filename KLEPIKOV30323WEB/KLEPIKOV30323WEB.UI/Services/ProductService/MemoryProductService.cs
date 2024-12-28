@@ -11,8 +11,8 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
         public MemoryProductService(ICategoryService categoryService)
         {
             _categories = categoryService.GetCategoryListAsync()
-            .Result
-            .Data;
+                                            .Result
+                                            .Data;
             SetupData();
         }
         /// <summary>
@@ -34,27 +34,27 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
                         _categories.Find(c=>c.NormalizedName.Equals("fruits")).Id},
                     new Product {Id = 3, Name="Лимон",
                         Description="Кислый, желтый",
-                        Price =330, Image="images/Лимон.png",
+                        Price =130, Image="images/Лимон.png",
                         CategoryId=
                         _categories.Find(c=>c.NormalizedName.Equals("fruits")).Id},
                     new Product {Id = 4, Name="Лук",
                         Description="Острый, красный",
-                        Price =330, Image="images/Лук.png",
+                        Price =120, Image="images/Лук.png",
                         CategoryId=
                         _categories.Find(c=>c.NormalizedName.Equals("vegetables")).Id},
                     new Product {Id = 5, Name="Манго",
                         Description="Спелое, вкусное",
-                        Price =330, Image="images/Манго.png",
+                        Price =190, Image="images/Манго.png",
                         CategoryId=
                         _categories.Find(c=>c.NormalizedName.Equals("fruits")).Id},
                     new Product {Id = 6, Name="Миндаль",
                         Description="Полезные",
-                        Price =330, Image="images/Миндаль.png",
+                        Price =150, Image="images/Миндаль.png",
                         CategoryId=
                         _categories.Find(c=>c.NormalizedName.Equals("nuts")).Id},
                     new Product {Id = 7, Name="Сыр",
                         Description="Нежный",
-                        Price =330, Image="images/Сыр.png",
+                        Price =140, Image="images/Сыр.png",
                         CategoryId=
                         _categories.Find(c=>c.NormalizedName.Equals("milk")).Id},
                     new Product {Id = 8, Name="Творог",
