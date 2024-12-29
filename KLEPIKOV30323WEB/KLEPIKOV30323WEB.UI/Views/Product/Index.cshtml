@@ -5,8 +5,15 @@
     ViewData["Title"] = "Products";
     var request = ViewContext.HttpContext.Request;
     var returnUrl = request.Path + request.QueryString.ToUriComponent();
-    var categories = ViewData["categories"] as
-        IEnumerable<Category>;
+    var categories = ViewData["categories"] as IEnumerable<Category>;
+
+    string? category = request.Query["category"].ToString();
+    int prev = Model.CurrentPage == 1
+    ? 1
+    : Model.CurrentPage - 1;
+    int next = Model.CurrentPage == Model.TotalPages
+    ? Model.TotalPages
+    : Model.CurrentPage + 1;
 }
 
 <h2 class="m-3">Продукт дня</h2>
@@ -75,6 +82,45 @@
     }
     </div>
 }
+<!-- Pager -->
+<div class="row">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item @(prev==Model.CurrentPage ? "disabled":"")">
+                <a class="page-link "
+                    asp-controller="Product"
+                    asp-action="Index"
+                    asp-route-pageno="@prev"
+                    asp-route-category="@category"
+                    aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i==Model.CurrentPage?"active":"")">
+                    <a class="page-link"
+                       asp-controller="Product"
+                       asp-action="Index"
+                       asp-route-pageno="@i"
+                       asp-route-category="@category">
+                        @i
+                    </a>
+                </li>
+            }
+            <li class="page-item @(next==Model.CurrentPage ? "disabled":"")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-pageno="@next"
+                   asp-route-category="@category"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<!-- Pager -->
 <h2 class="text-warning">@ViewData["Error"]</h2>
 
 
