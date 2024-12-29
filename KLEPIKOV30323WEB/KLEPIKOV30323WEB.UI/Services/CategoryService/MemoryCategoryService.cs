@@ -10,7 +10,7 @@ namespace KLEPIKOV30323WEB.UI.Services.CategoryService
         {
             var categories = new List<Category>
             {
-            new Category {Id=1, Name="Фаукты",
+            new Category {Id=1, Name="Фрукты",
             NormalizedName="fruits"},
             new Category {Id=2, Name="Овощи",
             NormalizedName="vegetables"},

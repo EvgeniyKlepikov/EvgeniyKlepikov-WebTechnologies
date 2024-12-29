@@ -66,11 +66,32 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
         }
         public Task<ResponseData<ListModel<Product>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1)
         {
-            var model = new ListModel<Product>() { Items = _products };
-            var result = new ResponseData<ListModel<Product>>()
+            // Создать объект результата
+            var result = new ResponseData<ListModel<Product>>();
+            // Id категории для фильрации
+            int? categoryId = null;
+            // если требуется фильтрация, то найти Id категории
+            // с заданным categoryNormalizedName
+            if (categoryNormalizedName != null)
+                categoryId = _categories
+                .Find(c =>
+                c.NormalizedName.Equals(categoryNormalizedName))
+                ?.Id;
+            // Выбрать объекты, отфильтрованные по Id категории,
+            // если этот Id имеется
+            var data = _products
+            .Where(p => categoryId == null ||
+            p.CategoryId.Equals(categoryId))?
+            .ToList();
+            // поместить ранные в объект результата
+            result.Data = new ListModel<Product>() { Items = data };
+            // Если список пустой
+            if (data.Count == 0)
             {
-                Data = model
-            };
+                result.Success = false;
+                result.ErrorMessage = "Нет объектов в выбраннной категории";
+            }
+            // Вернуть результат
             return Task.FromResult(result);
         }
 
