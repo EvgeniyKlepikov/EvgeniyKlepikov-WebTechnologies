@@ -13,15 +13,21 @@
             aria-expanded="false">
         @User.Claims.FirstOrDefault(c => c.Type.Equals("Name",
                      StringComparison.OrdinalIgnoreCase))?.Value
-            <img src="@Url.Action("GetAvatar", "Image")" width="30"
+            <img img-action="GetAvatar" img-controller="Image" width="30"
+                 alt="User" class="rounded nav-color" />
+
+@*             <img src="@Url.Action("GetAvatar", "Image")" width="30"
              alt="User" class="rounded nav-color" />
-    </button>
+ *@    </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <li>
             <span class="dropdown-item-text">
-                <img src="@Url.Action("GetAvatar", "Image")"
+                <img img-action="GetAvatar" img-controller="Image"
                      width="50" alt="User" class="rounded" />
-                @User.Identity?.Name!
+
+@*                 <img src="@Url.Action("GetAvatar", "Image")"
+                     width="50" alt="User" class="rounded" />
+ *@                @User.Identity?.Name!
             </span>
         </li>
         <li><hr class="dropdown-divider"></li>
