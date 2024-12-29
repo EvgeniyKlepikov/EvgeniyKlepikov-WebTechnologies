@@ -1,18 +1,20 @@
 ﻿using KLEPIKOV30323WEB.Domain.Entities;
 using KLEPIKOV30323WEB.Domain.Models;
 using KLEPIKOV30323WEB.UI.Services.CategoryService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KLEPIKOV30323WEB.UI.Services.ProductService
 {
     public class MemoryProductService : IProductService
     {
+        private readonly ICategoryService _categoryService;
+        private readonly IConfiguration _config;
         List<Product> _products;
         List<Category> _categories;
-        public MemoryProductService(ICategoryService categoryService)
+        public MemoryProductService([FromServices] IConfiguration config, ICategoryService categoryService)
         {
-            _categories = categoryService.GetCategoryListAsync()
-                                            .Result
-                                            .Data;
+            _categories = categoryService.GetCategoryListAsync().Result.Data;
+            _config = config;
             SetupData();
         }
         /// <summary>
@@ -83,8 +85,23 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
             .Where(p => categoryId == null ||
             p.CategoryId.Equals(categoryId))?
             .ToList();
-            // поместить ранные в объект результата
-            result.Data = new ListModel<Product>() { Items = data };
+            // получить размер страницы из конфигурации
+            int pageSize = _config.GetSection("ItemsPerPage").Get<int>();
+            // получить общее количество страниц
+            int totalPages = (int)Math.Ceiling(data.Count /
+            (double)pageSize);
+            // получить данные страницы
+            var listData = new ListModel<Product>()
+            {
+                Items = data
+                    .Skip((pageNo - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList(),
+                CurrentPage = pageNo,
+                TotalPages = totalPages
+            };
+            // поместить данные в объект результата
+            result.Data = listData;
             // Если список пустой
             if (data.Count == 0)
             {

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Product>
+﻿@using KLEPIKOV30323WEB.Domain.Models
+@model ListModel<Product>
 
 @{
     ViewData["Title"] = "Products";
@@ -46,7 +47,7 @@
 @if (Model != null)
 {
     <div class="card-group">
-    @foreach (var item in Model)
+    @foreach (var item in Model.Items)
     {
         <div class="col-4 p-4">
             <div class="card border-dark m-2">
