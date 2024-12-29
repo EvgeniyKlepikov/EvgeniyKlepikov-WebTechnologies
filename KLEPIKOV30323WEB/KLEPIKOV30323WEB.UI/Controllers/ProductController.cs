@@ -7,6 +7,8 @@ namespace KLEPIKOV30323WEB.UI.Controllers
     public class ProductController(ICategoryService categoryService,
     IProductService productService) : Controller
     {
+        [Route("Catalog")]
+        [Route("Catalog/{category}")]
         public async Task<IActionResult> Index(string? category, int pageNo = 1)
         {
             // получить список категорий
