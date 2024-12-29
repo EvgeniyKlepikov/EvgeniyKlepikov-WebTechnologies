@@ -78,9 +78,9 @@ namespace KLEPIKOV30323WEB.UI.TagHelpers
             };
             string url;
             // Для страниц администратора будет использоваться не MVC, а Razor pages
-            //if (Admin)
-            //    url = linkGenerator.GetPathByPage(httpContextAccessor.HttpContext, page: "./Index", values: routeData);
-            //else
+            if (Admin)
+                url = linkGenerator.GetPathByPage(httpContextAccessor.HttpContext, page: "./Index", values: routeData);
+            else
                 url = linkGenerator.GetPathByAction("index", "product", routeData);
             a.Attributes.Add("href", url);
             var text = String.IsNullOrEmpty(innerText)
