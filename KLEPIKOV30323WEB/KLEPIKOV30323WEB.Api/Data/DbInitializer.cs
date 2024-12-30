@@ -1,4 +1,5 @@
 ﻿using KLEPIKOV30323WEB.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace KLEPIKOV30323WEB.Api.Data
 {
@@ -11,6 +12,10 @@ namespace KLEPIKOV30323WEB.Api.Data
             // Получение контекста БД
             using var scope = app.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            // Выполнение миграций
+            await context.Database.MigrateAsync();
+
             // Заполнение данными
             if (!context.Categories.Any() && !context.Products.Any())
             {
@@ -23,10 +28,11 @@ namespace KLEPIKOV30323WEB.Api.Data
                 };
                 await context.Categories.AddRangeAsync(categories);
                 await context.SaveChangesAsync();
+
                 var products = new List<Product>
                 {
                     new Product {Name="Банан", Description="Сладкие, эквадорские",
-                        Price =200, Image="Images/Банан.png",
+                        Price =200, Image=uri+"Images/Банан.png",
                         Category=categories.FirstOrDefault(c=>c.NormalizedName.Equals("fruits"))},
                     new Product {Name="Гранат",
                         Description="Сочный, красный",
@@ -38,26 +44,26 @@ namespace KLEPIKOV30323WEB.Api.Data
                         Category=categories.FirstOrDefault(c=>c.NormalizedName.Equals("fruits"))},
                     new Product {Name="Лук",
                         Description="Острый, красный",
-                        Price =120, Image="Images/Лук.png",
+                        Price =120, Image=uri+"Images/Лук.png",
                         Category=categories.FirstOrDefault(c=>c.NormalizedName.Equals("vegetables"))},
                     new Product {Name="Манго",
                         Description="Спелое, вкусное",
-                        Price =190, Image="Images/Манго.png",
+                        Price =190, Image=uri+"Images/Манго.png",
                         Category = categories.FirstOrDefault(c => c.NormalizedName.Equals("fruits"))},
                     new Product {Name="Миндаль",
                         Description="Полезные",
-                        Price =150, Image="Images/Миндаль.png",
+                        Price =150, Image=uri+"Images/Миндаль.png",
                         Category = categories.FirstOrDefault(c => c.NormalizedName.Equals("nuts"))},
                     new Product {Name="Сыр",
                         Description="Нежный",
-                        Price =140, Image="Images/Сыр.png",
+                        Price =140, Image=uri+"Images/Сыр.png",
                         Category=categories.FirstOrDefault(c=>c.NormalizedName.Equals("milk"))},
                     new Product {Name="Творог",
                         Description="Рассыпчетый",
-                        Price =330, Image="Images/Творог.png",
+                        Price =330, Image=uri+"Images/Творог.png",
                         Category = categories.FirstOrDefault(c => c.NormalizedName.Equals("milk"))}
                 };
-                await context.AddRangeAsync(products);
+                await context.Products.AddRangeAsync(products);
                 await context.SaveChangesAsync();
             }
         }
