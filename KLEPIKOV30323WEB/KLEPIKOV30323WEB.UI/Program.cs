@@ -3,6 +3,7 @@ using KLEPIKOV30323WEB.UI.Services.CategoryService;
 using KLEPIKOV30323WEB.UI.Services.ProductService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -26,7 +27,8 @@ builder.Services.AddDefaultIdentity<AppUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddTransient<IEmailSender, NoOpEmailSender>();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+//builder.Services.AddTransient<IEmailSender, NoOpEmailSender>();
 
 builder.Services.AddAuthorization(opt =>
 {
@@ -34,9 +36,15 @@ builder.Services.AddAuthorization(opt =>
     p.RequireClaim(ClaimTypes.Role, "admin"));
 });
 
-builder.Services.AddScoped<ICategoryService, MemoryCategoryService>();
-builder.Services.AddScoped<IProductService, MemoryProductService>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddRazorPages();
+builder.Services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+//builder.Services.AddScoped<ICategoryService, MemoryCategoryService>();
+//builder.Services.AddScoped<IProductService, MemoryProductService>();
+builder.Services.AddHttpClient<IProductService, ApiProductService>(opt
+=> opt.BaseAddress = new Uri("https://localhost:7002/api/products/"));
+builder.Services.AddHttpClient<ICategoryService, ApiCategoryService>(opt
+=> opt.BaseAddress = new Uri("https://localhost:7002/api/categories/"));
 
 var app = builder.Build();
 
@@ -59,6 +67,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Добавлено для поддержки аутентификации
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KLEPIKOV30323WEB.Api.Data;
 using KLEPIKOV30323WEB.Domain.Entities;
+using KLEPIKOV30323WEB.Domain.Models;
 
 namespace KLEPIKOV30323WEB.Api.Controllers
 {
@@ -23,9 +24,41 @@ namespace KLEPIKOV30323WEB.Api.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<ResponseData<ListModel<Product>>>> GetProducts(
+                        string? category,
+                        int pageNo = 1,
+                        int pageSize = 3)
         {
-            return await _context.Products.ToListAsync();
+            // Создать объект результата
+            var result = new ResponseData<ListModel<Product>>();
+            // Фильтрация по категории загрузка данных категории
+            var data = _context.Products
+                .Include(p => p.Category)
+                .Where(p => String.IsNullOrEmpty(category)
+                        || p.Category.NormalizedName.Equals(category));
+            // Подсчет общего количества страниц
+            int totalPages = (int)Math.Ceiling(data.Count() / (double)pageSize);
+            if (pageNo > totalPages)
+                pageNo = totalPages;
+            // Создание объекта ListModel с нужной страницей данных
+            var listData = new ListModel<Product>()
+            {
+                Items = await data
+                                .Skip((pageNo - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync(),
+                CurrentPage = pageNo,
+                TotalPages = totalPages
+            };
+            // поместить данные в объект результата
+            result.Data = listData;
+            // Если список пустой
+            if (data.Count() == 0)
+            {
+                result.Success = false;
+                result.ErrorMessage = "Нет объектов в выбранной категории";
+            }
+            return result;
         }
 
         // GET: api/Products/5

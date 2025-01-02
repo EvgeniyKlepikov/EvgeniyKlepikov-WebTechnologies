@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KLEPIKOV30323WEB.Api.Data;
 using KLEPIKOV30323WEB.Domain.Entities;
+using KLEPIKOV30323WEB.Domain.Models;
 
 namespace KLEPIKOV30323WEB.Api.Controllers
 {
@@ -23,9 +24,13 @@ namespace KLEPIKOV30323WEB.Api.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<ActionResult<ResponseData<IEnumerable<Category>>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            var response = new ResponseData<IEnumerable<Category>>
+            {
+                Data = await _context.Categories.ToListAsync()
+            };
+            return response;
         }
 
         // GET: api/Categories/5
