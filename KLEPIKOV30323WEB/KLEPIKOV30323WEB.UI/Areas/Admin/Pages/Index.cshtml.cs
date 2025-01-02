@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using KLEPIKOV30323WEB.Domain.Entities;
 using KLEPIKOV30323WEB.UI.Data;
 using KLEPIKOV30323WEB.UI.Services.ProductService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KLEPIKOV30323WEB.UI.Areas.Admin.Pages
 {
+    [Authorize(Policy = "admin")]
     public class IndexModel : PageModel
     {
         private readonly IProductService _productService;

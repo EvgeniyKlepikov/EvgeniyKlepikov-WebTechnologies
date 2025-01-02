@@ -31,7 +31,8 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
                 var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri($"{httpClient.BaseAddress.AbsoluteUri}/{productResult.Id}")
+                    //RequestUri = new Uri($"{httpClient.BaseAddress.AbsoluteUri}/{productResult.Id}")
+                    RequestUri = new Uri(httpClient.BaseAddress, $"{productResult.Id}/uploadimage")
                 };
                 // Создать контент типа multipart form-data
                 var content = new MultipartFormDataContent();
