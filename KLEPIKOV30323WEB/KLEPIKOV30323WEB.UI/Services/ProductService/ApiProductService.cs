@@ -1,13 +1,55 @@
 ﻿using KLEPIKOV30323WEB.Domain.Entities;
 using KLEPIKOV30323WEB.Domain.Models;
+using System.Text.Json;
 
 namespace KLEPIKOV30323WEB.UI.Services.ProductService
 {
     public class ApiProductService(HttpClient httpClient) : IProductService
     {
-        public Task<ResponseData<Product>> CreateProductAsync(Product product, IFormFile? formFile)
+        public async Task<ResponseData<Product>> CreateProductAsync(Product product, IFormFile? formFile)
         {
-            throw new NotImplementedException();
+            var serializerOptions = new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+            // Подготовить объект, возвращаемый методом
+            var responseData = new ResponseData<Product>();
+            // Послать запрос к API для сохранения объекта
+            var response = await httpClient.PostAsJsonAsync(httpClient.BaseAddress, product);
+            if (!response.IsSuccessStatusCode)
+            {
+                responseData.Success = false;
+                responseData.ErrorMessage = $"Не удалось создать объект: {response.StatusCode}";
+                return responseData;
+            }
+            // Если файл изображения передан клиентом
+            if (formFile != null)
+            {
+                // получить созданный объект из ответа Api-сервиса
+                var productResult = await response.Content.ReadFromJsonAsync<Product>();
+                // создать объект запроса
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    RequestUri = new Uri($"{httpClient.BaseAddress.AbsoluteUri}/{productResult.Id}")
+                };
+                // Создать контент типа multipart form-data
+                var content = new MultipartFormDataContent();
+                // создать потоковый контент из переданного файла
+                var streamContent = new StreamContent(formFile.OpenReadStream());
+                // добавить потоковый контент в общий контент по именем "image"
+                content.Add(streamContent, "image", formFile.FileName);
+                // поместить контент в запрос
+                request.Content = content;
+                // послать запрос к Api-сервису
+                response = await httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    responseData.Success = false;
+                    responseData.ErrorMessage = $"Не удалось сохранить изображение: {response.StatusCode}";
+                }
+            }
+            return responseData;
         }
 
         public Task DeleteProductAsync(int id)

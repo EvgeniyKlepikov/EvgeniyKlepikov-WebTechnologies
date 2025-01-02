@@ -7,26 +7,24 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using KLEPIKOV30323WEB.Domain.Entities;
 using KLEPIKOV30323WEB.UI.Data;
+using KLEPIKOV30323WEB.UI.Services.CategoryService;
+using KLEPIKOV30323WEB.UI.Services.ProductService;
 
 namespace KLEPIKOV30323WEB.UI.Areas.Admin.Pages
 {
-    public class CreateModel : PageModel
+    public class CreateModel(ICategoryService categoryService, IProductService productService) : PageModel
     {
-        private readonly KLEPIKOV30323WEB.UI.Data.AppDbContext _context;
-
-        public CreateModel(KLEPIKOV30323WEB.UI.Data.AppDbContext context)
+        public async Task<IActionResult> OnGet()
         {
-            _context = context;
-        }
-
-        public IActionResult OnGet()
-        {
-        ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+            var categoryListData = await categoryService.GetCategoryListAsync();
+            ViewData["CategoryId"] = new SelectList(categoryListData.Data, "Id", "Name");
             return Page();
         }
 
         [BindProperty]
         public Product Product { get; set; } = default!;
+        [BindProperty]
+        public IFormFile? Image { get; set; }
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
@@ -35,9 +33,7 @@ namespace KLEPIKOV30323WEB.UI.Areas.Admin.Pages
             {
                 return Page();
             }
-
-            _context.Products.Add(Product);
-            await _context.SaveChangesAsync();
+            await productService.CreateProductAsync(Product, Image);
 
             return RedirectToPage("./Index");
         }
