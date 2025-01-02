@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KLEPIKOV30323WEB.Api\KLEPIKOV30323WEB.Api.csproj" />
     <ProjectReference Include="..\KLEPIKOV30323WEB.Domain\KLEPIKOV30323WEB.Domain.csproj" />
   </ItemGroup>
 
