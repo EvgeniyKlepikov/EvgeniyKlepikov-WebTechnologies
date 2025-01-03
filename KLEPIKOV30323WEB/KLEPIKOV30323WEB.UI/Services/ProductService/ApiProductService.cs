@@ -53,14 +53,60 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
             return responseData;
         }
 
-        public Task DeleteProductAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<ResponseData<bool>> DeleteProductAsync(int id)
+        //{
+        //    var responseData = new ResponseData<bool>();
+        //    try
+        //    {
+        //        var response = await httpClient.DeleteAsync($"{httpClient.BaseAddress}{id}");
 
-        public Task<ResponseData<Product>> GetProductByIdAsync(int id)
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            responseData.Success = true;
+        //            responseData.Data = true;  // Успешное удаление
+        //        }
+        //        else
+        //        {
+        //            responseData.Success = false;
+        //            responseData.ErrorMessage = $"Failed to delete product: {response.StatusCode}";
+        //            responseData.Data = false;  // Неудачное удаление
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        responseData.Success = false;
+        //        responseData.ErrorMessage = $"Exception occurred: {ex.Message}";
+        //        responseData.Data = false;
+        //    }
+        //    return responseData;
+        //}
+        public async Task<ResponseData<Product>> GetProductByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await httpClient.GetAsync(httpClient.BaseAddress + $"{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var product = await response.Content.ReadFromJsonAsync<ResponseData<Product>>();
+                    return product;
+                }
+                else
+                {
+                    return new ResponseData<Product>
+                    {
+                        Success = false,
+                        ErrorMessage = $"API returned {response.StatusCode}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseData<Product>
+                {
+                    Success = false,
+                    ErrorMessage = $"Exception occurred: {ex.Message}"
+                };
+            }
         }
 
         public async Task<ResponseData<ListModel<Product>>>
@@ -85,6 +131,11 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
         }
 
         public Task UpdateProductAsync(int id, Product product, IFormFile? formFile)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IProductService.DeleteProductAsync(int id)
         {
             throw new NotImplementedException();
         }
