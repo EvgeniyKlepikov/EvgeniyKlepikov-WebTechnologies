@@ -1,4 +1,5 @@
 using KLEPIKOV30323WEB.UI.Data;
+using KLEPIKOV30323WEB.UI.Middleware;
 using KLEPIKOV30323WEB.UI.Services.CategoryService;
 using KLEPIKOV30323WEB.UI.Services.ProductService;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 builder.Services.AddDefaultIdentity<AppUser>(options =>
     {
@@ -67,7 +70,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+//app.UseLogMiddleware();
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthentication(); // Добавлено для поддержки аутентификации
