@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +53,8 @@ builder.Services.AddHttpClient<IProductService, ApiProductService>(opt
 builder.Services.AddHttpClient<ICategoryService, ApiCategoryService>(opt
 => opt.BaseAddress = new Uri("https://localhost:7002/api/categories/"));
 
+builder.Services.AddSerilog();
+
 var app = builder.Build();
 
 await DbInit.SetupIdentityAdmin(app);
@@ -67,10 +70,15 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+Log.Logger = new LoggerConfiguration()
+                    .WriteTo.Console()
+                    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-//app.UseLogMiddleware();
+app.UseLogMiddleware();
+
 app.UseSession();
 app.UseRouting();
 

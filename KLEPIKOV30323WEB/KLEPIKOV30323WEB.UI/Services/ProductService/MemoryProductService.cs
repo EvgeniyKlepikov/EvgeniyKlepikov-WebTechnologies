@@ -114,7 +114,32 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
 
         public Task<ResponseData<Product>> GetProductByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
+            // Создаем объект результата
+            var result = new ResponseData<Product>();
+
+            // Ищем блюдо по идентификатору
+            var product = _products.FirstOrDefault(d => d.Id == id);
+
+            if (product == null)
+            {
+                // Если блюдо не найдено, устанавливаем соответствующие значения в объекте результата
+                result.Success = false;
+                //result.Message = "Блюдо не найдено.";
+                result.Data = null;
+            }
+            else
+            {
+                // Если блюдо найдено, устанавливаем соответствующие значения в объекте результата
+                result.Success = true;
+                //result.Message = "Блюдо найдено.";
+                result.Data = product;
+            }
+
+            // Возвращаем результат в виде задачи
+            return Task.FromResult(result);
+
         }
 
         public Task UpdateProductAsync(int id, Product product, IFormFile? formFile)

@@ -82,31 +82,33 @@ namespace KLEPIKOV30323WEB.UI.Services.ProductService
         //}
         public async Task<ResponseData<Product>> GetProductByIdAsync(int id)
         {
-            try
-            {
-                var response = await httpClient.GetAsync(httpClient.BaseAddress + $"{id}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var product = await response.Content.ReadFromJsonAsync<ResponseData<Product>>();
-                    return product;
-                }
-                else
-                {
-                    return new ResponseData<Product>
-                    {
-                        Success = false,
-                        ErrorMessage = $"API returned {response.StatusCode}"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ResponseData<Product>
-                {
-                    Success = false,
-                    ErrorMessage = $"Exception occurred: {ex.Message}"
-                };
-            }
+            //try
+            //{
+            //    var response = await httpClient.GetAsync(httpClient.BaseAddress + $"{id}");
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        var product = await response.Content.ReadFromJsonAsync<ResponseData<Product>>();
+            //        return product;
+            //    }
+            //    else
+            //    {
+            //        return new ResponseData<Product>
+            //        {
+            //            Success = false,
+            //            ErrorMessage = $"API returned {response.StatusCode}"
+            //        };
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return new ResponseData<Product>
+            //    {
+            //        Success = false,
+            //        ErrorMessage = $"Exception occurred: {ex.Message}"
+            //    };
+            //}
+            throw new NotImplementedException();
+
         }
 
         public async Task<ResponseData<ListModel<Product>>>

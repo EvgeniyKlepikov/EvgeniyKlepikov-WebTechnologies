@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Serilog;
 
 namespace KLEPIKOV30323WEB.UI.Controllers
 {
@@ -21,6 +22,7 @@ namespace KLEPIKOV30323WEB.UI.Controllers
         {
             ViewData["text"] = "Лабораторная работа №2";
             SelectList data = new SelectList(_listData, "Id", "Name");
+            //Log.Information("Hello из метода Index контроллера Home!");
             return View(data);
         }
     }
