@@ -1,0 +1,22 @@
+﻿@page "/products"
+@using KLEPIKOV30323WEB.Blazor.Services
+@using KLEPIKOV30323WEB.Domain.Entities
+@rendermode InteractiveServer
+<CascadingValue Value="ProductService">
+    <ProductsList ProductSelected="ShowDetails" />
+</CascadingValue>
+<ProductDetails Product="SelectedProduct" />
+
+@code {
+    [Inject] IProductService<Product> ProductService { get; set; }
+    [Parameter]
+    public Product SelectedProduct { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await ProductService.GetProducts();
+    }
+    void ShowDetails(int id)
+    {
+        SelectedProduct = ProductService.Products.First(d => d.Id == id);
+    }
+}
